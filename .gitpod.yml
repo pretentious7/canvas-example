@@ -3,4 +3,6 @@ image:
 
 tasks:
   - init: npm install && npm run build && cargo build
-    command: cargo watch -x run
+    command: npm run serve
+
+    #command: cargo watch -x run

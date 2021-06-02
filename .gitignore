@@ -1,0 +1,4 @@
+#ignore all directories in root 
+/*/
+#except src
+!/src/

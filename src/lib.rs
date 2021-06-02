@@ -61,7 +61,7 @@ fn in_mandelbrot(cplx: &Complex) -> bool {
     while z.mag() <= 2.0 {
         z = (z.mul(&z)).add(&cplx); // z = z^2 + cplx
         count += 1;
-        
+
         if count >= ITER_CONST {
             in_set = true;
             break;
@@ -88,7 +88,7 @@ fn fill_mandelbrot(points_array: &mut Vec<Vec<bool>>) {
 
     for count_y in 0..y_len {
         for count_x in 0..x_len {
-            points_array[count_y as usize][count_x as usize] = in_mandelbrot(&build_complex(x,y));
+            points_array[count_x as usize][count_y as usize] = in_mandelbrot(&build_complex(x,y));
             x += x_step;
         }
         y += y_step;

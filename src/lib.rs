@@ -45,17 +45,6 @@ fn in_mandelbrot(cplx: &Complex) -> bool {
     let mut z = build_complex(0.0, 0.0);
 
     let mut in_set = false;
-
-    // reverse mandelbrot lul
-  /*  for count in 0..ITER_CONST {
-
-        z = (z.mul(&z)).add(&cplx); // z = z^2 + cplx
-        if z.mag() > 2.0 {
-            in_set = true;
-            break;
-        }
-    } */
-
     let mut count = 0;
 
     while z.mag() <= 2.0 {

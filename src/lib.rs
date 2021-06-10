@@ -26,6 +26,8 @@ fn build_complex(real: f64, imag: f64) -> Complex {
 impl Complex {
     fn add(&self, other: &Complex) -> Complex {
         build_complex(self.real + other.real, self.imag + other.imag)
+        //self.real = self.real + other.real;
+        //self.imag = self.imag + other.imag;
     }
 
     fn mag(&self) -> f64 {

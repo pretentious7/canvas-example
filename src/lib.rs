@@ -4,6 +4,7 @@ use wasm_bindgen::JsCast;
 use js_sys::{Uint8ClampedArray, WebAssembly};
 
 // neat macro wrapper for js console.log 
+#[allow(unused_macros)]
 macro_rules! log {
     ( $( $t:tt )* ) => {
         web_sys::console::log_1(&format!( $( $t )* ).into());
@@ -26,10 +27,8 @@ fn build_complex(real: f64, imag: f64) -> Complex {
 // methods for complex numbers
 impl Complex {
     fn add(mut self, other: &Complex) -> Complex {
-        let real = self.real + other.real;
-        let imag = self.imag + other.imag;
-        self.real = real;
-        self.imag = imag;
+        self.real += other.real;
+        self.imag += other.imag;
         self
     }
 
@@ -47,7 +46,6 @@ impl Complex {
 
 }
 
-// refactor 
 fn in_mandelbrot(cplx: &Complex) -> bool {
     const ITER_CONST: i32 = 100;
     let mut z = build_complex(0.0, 0.0);
@@ -80,11 +78,14 @@ fn fill_mandelbrot(points_array: & mut Vec<u8>, x_len: i32, y_len: i32) {
     for count in 0..num_pixels {
         let c = count as i32;
 
-        let x = c % x_len;
-        let y = c / x_len;
+        // calculate coordinates on canvas
+        let x = (c % x_len) as f64;
+        let y = (c / x_len) as f64;
 
-        let x_com = -2.0 + (x as f64)* x_step;
-        let y_com = -2.0 + (y as f64) * y_step;
+        // real and imaginary parts of complex number for 
+        // specified canvas pixel
+        let x_com = -2.0 + x * x_step;
+        let y_com = -2.0 + y * y_step;
 
         let in_set = in_mandelbrot(&build_complex(x_com, y_com));
 

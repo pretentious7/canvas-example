@@ -7,9 +7,12 @@ import('./pkg')
 
 const rust = import('./pkg');
 
+let time = document.getElementById("time");
+
 rust
   .then(m => {
-    console.log(performance.now());
+    let start = performance.now();
     m.render();
-    console.log(performance.now());
+    let end = performance.now();
+    time.textContent = end-start;
   }); 

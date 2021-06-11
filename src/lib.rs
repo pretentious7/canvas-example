@@ -25,11 +25,8 @@ fn build_complex(real: f64, imag: f64) -> Complex {
 // methods for complex numbers
 impl Complex {
     fn add(mut self, other: &Complex) -> Complex {
-        //build_complex(self.real + other.real, self.imag + other.imag)
-        let real = self.real + other.real;
-        let imag = self.imag + other.imag;
-        self.real = real;
-        self.imag = imag;
+        self.real += other.real;
+        self.imag += other.imag;
         self
     }
 
@@ -38,21 +35,15 @@ impl Complex {
     }
 
     fn square(mut self) -> Complex {
+        // foil operation to multiply complex numbers
         let real = self.real*self.real - self.imag*self.imag;
         let imag = self.imag*self.real + self.real*self.imag;
         self.real = real;
         self.imag = imag;
         self
     }
-    /*
-    fn mul(&self, other: &Complex) -> Complex {
-        let real_part = self.real*other.real - self.imag*other.imag;
-        let imag_part = self.imag*other.real + self.real*other.imag;
-        build_complex(real_part, imag_part)
-    } */
 }
 
-// refactor 
 fn in_mandelbrot(cplx: &Complex) -> bool {
     const ITER_CONST: i32 = 100;
     let mut z = build_complex(0.0, 0.0);

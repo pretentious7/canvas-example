@@ -98,8 +98,8 @@ fn fill_mandelbrot(points_array: &mut Vec<Vec<bool>>) {
     }
 }
 
-#[wasm_bindgen(start)]
-pub fn start() {
+#[wasm_bindgen]
+pub fn render() {
     let document = web_sys::window().unwrap().document().unwrap();
     let canvas = document.get_element_by_id("canvas").unwrap();
     let canvas: web_sys::HtmlCanvasElement = canvas

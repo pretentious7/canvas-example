@@ -1,14 +1,15 @@
 // For more comments about what's going on here, check out the `hello_world`
 // example.
+/*
 import('./pkg')
   .catch(console.error);
+*/
 
-  /*
 const rust = import('./pkg');
 
 rust
   .then(m => {
-    //console.log(performance.now());
+    console.log(performance.now());
     m.render();
-    //console.log(performance.now());
-  }); */
+    console.log(performance.now());
+  }); 

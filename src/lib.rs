@@ -24,21 +24,32 @@ fn build_complex(real: f64, imag: f64) -> Complex {
 
 // methods for complex numbers
 impl Complex {
-    fn add(&self, other: &Complex) -> Complex {
-        build_complex(self.real + other.real, self.imag + other.imag)
-        //self.real = self.real + other.real;
-        //self.imag = self.imag + other.imag;
+    fn add(mut self, other: &Complex) -> Complex {
+        //build_complex(self.real + other.real, self.imag + other.imag)
+        let real = self.real + other.real;
+        let imag = self.imag + other.imag;
+        self.real = real;
+        self.imag = imag;
+        self
     }
 
     fn mag(&self) -> f64 {
         self.real.hypot(self.imag)
     }
 
+    fn square(mut self) -> Complex {
+        let real = self.real*self.real - self.imag*self.imag;
+        let imag = self.imag*self.real + self.real*self.imag;
+        self.real = real;
+        self.imag = imag;
+        self
+    }
+    /*
     fn mul(&self, other: &Complex) -> Complex {
         let real_part = self.real*other.real - self.imag*other.imag;
         let imag_part = self.imag*other.real + self.real*other.imag;
         build_complex(real_part, imag_part)
-    }
+    } */
 }
 
 // refactor 
@@ -50,7 +61,7 @@ fn in_mandelbrot(cplx: &Complex) -> bool {
     let mut count = 0;
 
     while z.mag() <= 2.0 {
-        z = (z.mul(&z)).add(&cplx); // z = z^2 + cplx
+        z = (z.square()).add(&cplx); // z = z^2 + cplx
         count += 1;
 
         if count >= ITER_CONST {

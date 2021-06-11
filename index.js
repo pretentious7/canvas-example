@@ -2,3 +2,13 @@
 // example.
 import('./pkg')
   .catch(console.error);
+
+  /*
+const rust = import('./pkg');
+
+rust
+  .then(m => {
+    //console.log(performance.now());
+    m.render();
+    //console.log(performance.now());
+  }); */

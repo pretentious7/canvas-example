@@ -47,34 +47,36 @@ impl Complex {
 
 }
 
-fn in_mandelbrot(cplx: &Complex) -> bool {
+fn in_mandelbrot(cplx: &Complex) -> u8 {
     const ITER_CONST: i32 = 100;
     let mut z = build_complex(0.0, 0.0);
+    let mut count: i32 = 0;
 
-    let mut in_set = false;
-    let mut count = 0;
-
-    while z.mag() <= 2.0 {
+    while z.mag() <= 2.0 && count < 1000 {
         z = (z.square()).add(&cplx); // z = z^2 + cplx
         count += 1;
-
-        if count >= ITER_CONST {
-            in_set = true;
-            break;
-        }
     }
 
-    in_set
+    if count > 255 {
+        count = 255;
+    }
+
+    count as u8
+
 }
 
+fn fill_mandelbrot(
+    points_array: & mut Vec<u8>, 
+    start_x: f64, 
+    start_y: f64, 
+    x_len: i32, 
+    y_len: i32, 
+    window: f64) {
 
-fn fill_mandelbrot(points_array: & mut Vec<u8>, x_len: i32, y_len: i32) {
+    let num_pixels = x_len * y_len;
 
-    let len = points_array.len();
-    let num_pixels = len/4;
-
-    let x_step = 4.0/(x_len as f64);
-    let y_step = 4.0/(y_len as f64);
+    let x_step = window/(x_len as f64);
+    let y_step = window/(y_len as f64);
 
     for count in 0..num_pixels {
         let c = count as i32;
@@ -85,14 +87,17 @@ fn fill_mandelbrot(points_array: & mut Vec<u8>, x_len: i32, y_len: i32) {
 
         // real and imaginary parts of complex number for 
         // specified canvas pixel
-        let x_com = -2.0 + x * x_step;
-        let y_com = -2.0 + y * y_step;
+        let x_com = start_x + x * x_step;
+        let y_com = start_y + y * y_step;
 
         let in_set = in_mandelbrot(&build_complex(x_com, y_com));
 
-        if in_set {
-            points_array[count*4 + 3] = 255;
-        }
+        let i = count as usize;
+
+        points_array[i*4] = in_set;
+        points_array[i*4 + 1] = in_set;
+        points_array[i*4 + 2] = in_set;
+        points_array[i*4 + 3] = 255;
     }
 
 }
@@ -107,21 +112,15 @@ extern "C" {
 }
 
 #[wasm_bindgen]
-pub fn run() -> ImageData{
-    let document = web_sys::window().unwrap().document().unwrap();
-    let canvas = document.get_element_by_id("canvas").unwrap();
-    let canvas: web_sys::HtmlCanvasElement = canvas
-        .dyn_into::<web_sys::HtmlCanvasElement>()
-        .map_err(|_| ())
-        .unwrap();
+pub fn run(start_x: f64, start_y: f64, width: u32, height: u32, window: f64) -> ImageData{
 
-    let y_len: i32 = canvas.height() as i32;
-    let x_len: i32 = canvas.width() as i32;
+    let y_len: i32 = height as i32;
+    let x_len: i32 = width as i32;
 
     let pixels: usize = (x_len * y_len) as usize;
 
     let mut points_array = vec![0; pixels*4];
-    fill_mandelbrot(&mut points_array, x_len, y_len);
+    fill_mandelbrot(&mut points_array, start_x, start_y, x_len, y_len, window);
 
     let pointer = points_array.as_ptr() as usize;
 
